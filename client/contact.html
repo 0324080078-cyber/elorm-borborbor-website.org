@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Contact — Elorm Borborbor Group</title>
+
+    <!-- Fonts & basic styling -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg:#fffaf3;
+            --accent:#d32f2f;     /* warm accent */
+            --accent-2:#f3c623;   /* gold/kente */
+            --muted:#6b6b6b;
+            --card:#ffffff;
+            --success:#2e7d32;
+            --error:#c62828;
+            --max-width:1100px;
+            --radius:10px;
+            --shadow: 0 6px 20px rgba(0,0,0,0.08);
+            --kente: linear-gradient(90deg, #f3c623 0 20%, #d32f2f 20% 40%, #0b5f6a 40% 60%, #2e7d32 60% 80%, #d32f2f 80% 100%);
+        }
+
+        html,body{height:100%; margin:0; font-family:'Noto Sans',system-ui,Segoe UI,Roboto,Arial; background:var(--bg); color:#222;}
+        .container{max-width:var(--max-width); margin:36px auto; padding:28px; box-sizing:border-box;}
+        header{display:flex; gap:20px; align-items:center; margin-bottom:18px;}
+        .brand{display:flex; gap:12px; align-items:center;}
+        .brand .logo{width:56px;height:56px;border-radius:10px;background:var(--kente);box-shadow:var(--shadow);}
+        h1{font-size:1.4rem;margin:0}
+        p.lead{margin:4px 0 0;color:var(--muted);font-size:0.95rem}
+
+        .grid{display:grid;grid-template-columns:1fr 430px; gap:20px; align-items:start;}
+        @media (max-width:980px){ .grid{grid-template-columns:1fr; } .side{order:2} }
+
+        /* Map Card */
+        .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px;}
+        .map-wrap{height:320px; border-radius:8px; overflow:hidden; position:relative; background:#e9ecef;}
+        .map-iframe{width:100%;height:100%;border:0;display:block;}
+        .map-fallback{display:none;padding:16px;text-align:center;}
+        .map-fallback img{max-width:100%;height:auto;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.06)}
+        .map-actions{display:flex; gap:8px; margin-top:12px;}
+        .btn{display:inline-flex; gap:8px; align-items:center; padding:10px 12px; border-radius:8px; cursor:pointer; text-decoration:none; color:#fff; background:var(--accent); border:0; font-weight:600}
+        .btn.secondary{background:var(--accent-2); color:#222}
+        .location-details{margin-top:12px; display:flex; gap:12px; align-items:flex-start}
+        .loc-left{flex:1}
+        .loc-label{font-size:0.85rem;color:var(--muted); margin-bottom:6px}
+        .loc-value{font-weight:700}
+        .small{font-size:0.9rem;color:var(--muted)}
+
+        /* Form */
+        .form{padding:18px;}
+        .steps{display:flex;gap:8px;margin-bottom:12px;align-items:center}
+        .step{flex:1;background:linear-gradient(180deg,#f7f7f7,#fff);padding:8px 10px;border-radius:8px;text-align:center;font-size:0.9rem;color:var(--muted)}
+        .step.active{background:var(--kente);color:#fff;font-weight:700; box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+        .form-row{display:flex;gap:10px;margin-bottom:10px}
+        .form-row.col{flex-direction:column}
+        label{display:block;font-size:0.85rem;margin-bottom:6px}
+        input[type="text"], input[type="email"], input[type="date"], input[type="time"], select, textarea{
+            width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e6e6; font-size:0.95rem; box-sizing:border-box;
+        }
+        textarea{min-height:100px; resize:vertical;}
+        .file-input{display:flex; gap:8px; align-items:center}
+        .note{font-size:0.82rem;color:var(--muted); margin-top:6px}
+
+        .actions{display:flex; gap:8px; justify-content:space-between; align-items:center; margin-top:12px}
+        .actions .right{display:flex; gap:8px}
+
+        /* notification */
+        .toast{padding:12px 14px;border-radius:8px;color:#fff; display:inline-block}
+        .toast.success{background:var(--success)}
+        .toast.error{background:var(--error)}
+
+        /* preview card */
+        .summary{background:#fff9f2;border-radius:8px;padding:12px;margin-top:12px;border:1px dashed #fde8cf}
+        .muted{color:var(--muted)}
+
+        /* small touches */
+        .socials{display:flex; gap:8px; margin-top:8px}
+        .socials a{display:inline-block;padding:8px;border-radius:6px;background:#f6f6f6;text-decoration:none;color:#333;font-weight:600}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div class="logo" aria-hidden="true"></div>
+                <div>
+                    <h1>Contact & Book — Elorm Borborbor Group</h1>
+                    <p class="lead">Saviefe Agorkpo, Volta Region • Professional bookings, events & cultural services</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="grid">
+            <!-- LEFT: Map & Location -->
+            <section class="card">
+                <h2 style="margin-top:0">Location & Directions</h2>
+
+                <div class="map-wrap" id="mapContainer" aria-label="Map showing Saviefe Agorkpo">
+                    <!-- Google Maps iframe embed using query (works without API key) -->
+                    <iframe
+                        id="gmap-frame"
+                        class="map-iframe"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.google.com/maps?q=Saviefe+Agorkpo+Volta+Region+Ghana&z=15&output=embed"
+                        title="Google Map — Saviefe Agorkpo, Volta Region">
+                    </iframe>
+
+                    <!-- Fallback content (hidden by default, shown if iframe fails) -->
+                    <div id="mapFallback" class="map-fallback" role="img" aria-label="Static map fallback" style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;">
+                        <div>
+                            <!-- OpenStreetMap static tile via map static tile provider (no API key). Coordinates centered for Saviefe Agorkpo -->
+                            <img src="https://static-maps.yandex.ru/1.x/?lang=en_US&ll=0.3970,6.4740&size=700,370&z=14&l=map&pt=0.3970,6.4740,pm2rdm"
+                                     alt="Static map of Saviefe Agorkpo">
+                            <div class="location-details" style="justify-content:center">
+                                <div class="loc-left">
+                                    <div class="loc-label">Location</div>
+                                    <div class="loc-value">Saviefe Agorkpo, Volta Region, Ghana</div>
+                                    <div class="small">Coordinates approx: 6.4740° N, 0.3970° E</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-actions">
+                    <a class="btn" id="directionsBtn" target="_blank" rel="noopener noreferrer"
+                         href="https://www.google.com/maps/dir/?api=1&destination=Saviefe+Agorkpo+Volta+Region+Ghana">
+                        Get Directions
+                    </a>
+                    <a class="btn secondary" id="openMapsBtn" target="_blank" rel="noopener noreferrer"
+                         href="https://www.google.com/maps/search/?api=1&query=Saviefe+Agorkpo+Volta+Region+Ghana">
+                        Open in Google Maps
+                    </a>
+                </div>
+
+                <div class="location-details" style="margin-top:14px;">
+                    <div class="loc-left">
+                        <div class="loc-label">Address</div>
+                        <div class="loc-value">Saviefe Agorkpo, Volta Region, Ghana</div>
+                        <div class="small">Approx. coordinates: 6.4740° N, 0.3970° E</div>
+                    </div>
+
+                    <div style="min-width:200px">
+                        <div class="loc-label">Contact</div>
+                        <div class="loc-value">elormborborborgroup@gmail.com</div>
+                        <div class="small">Owner: degboekwasielorm97@gmail.com</div>
+                        <div class="small" style="margin-top:8px">Phone: <strong>+233 24 682 6309</strong></div>
+                        <div class="socials" aria-hidden="true">
+                            <a href="#" title="Facebook">Facebook</a>
+                            <a href="#" title="Instagram">Instagram</a>
+                            <a href="#" title="X / Twitter">X</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT: Multi-step Booking Form -->
+            <aside class="card side">
+                <h2 style="margin-top:0">Book an Event</h2>
+                <form id="bookingForm" class="form" novalidate>
+                    <div class="steps" aria-hidden="false">
+                        <div class="step active" data-step="1">1. Contact</div>
+                        <div class="step" data-step="2">2. Event</div>
+                        <div class="step" data-step="3">3. Confirm</div>
+                    </div>
+
+                    <!-- STEP 1 -->
+                    <fieldset data-step="1" class="step-panel" aria-live="polite">
+                        <div class="form-row col">
+                            <label for="name">Full name</label>
+                            <input id="name" name="name" type="text" placeholder="e.g., Elorm Borborbor" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div style="flex:1">
+                                <label for="email">Email</label>
+                                <input id="email" name="email" type="email" placeholder="you@example.com" required>
+                            </div>
+                            <div style="width:170px">
+                                <label for="phone">Phone</label>
+                                <input id="phone" name="phone" type="text" placeholder="+233 24 682 6309" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row col">
+                            <label for="message">Short message or requirements</label>
+                            <textarea id="message" name="message" placeholder="Tell us about the event (brief)"></textarea>
+                        </div>
+
+                        <div class="actions">
+                            <div class="muted">We respect your privacy — messages kept confidential</div>
+                            <div class="right">
+                                <button type="button" class="btn" id="toStep2">Continue</button>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- STEP 2 -->
+                    <fieldset data-step="2" class="step-panel" style="display:none;">
+                        <div class="form-row">
+                            <div style="flex:1">
+                                <label for="eventType">Event type</label>
+                                <select id="eventType" name="eventType" required>
+                                    <option value="">Choose</option>
+                                    <option>Wedding</option>
+                                    <option>Funeral</option>
+                                    <option>Festival / Durbar</option>
+                                    <option>Private Party</option>
+                                    <option>Corporate</option>
+                                </select>
+                            </div>
+                            <div style="width:170px">
+                                <label for="date">Date</label>
+                                <input id="date" name="date" type="date" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div style="flex:1">
+                                <label for="time">Time</label>
+                                <input id="time" name="time" type="time">
+                            </div>
+                            <div style="width:170px">
+                                <label for="attendees">Attendees</label>
+                                <input id="attendees" name="attendees" type="text" placeholder="e.g., 150">
+                            </div>
+                        </div>
+
+                        <div class="form-row col">
+                            <label for="details">Event details & special requests</label>
+                            <textarea id="details" name="details" placeholder="Describe decorations, instruments, catering, etc."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div style="flex:1">
+                                <label for="file">Attach file (program, brief, rider)</label>
+                                <div class="file-input">
+                                    <input id="file" name="file" type="file" accept=".pdf,.doc,.docx,image/*">
+                                    <div class="note" id="fileNote">Max 5MB. Optional.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button type="button" class="btn secondary" id="backTo1">Back</button>
+                            <div class="right">
+                                <button type="button" class="btn" id="toStep3">Continue</button>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- STEP 3 -->
+                    <fieldset data-step="3" class="step-panel" style="display:none;">
+                        <h3 style="margin:0 0 8px">Confirm & Submit</h3>
+                        <div class="summary" id="summaryBox" aria-live="polite">
+                            <div class="muted">Review your booking details below. Once submitted, an auto-response will be simulated and owner will be notified.</div>
+                            <div style="margin-top:8px" id="summaryContent"></div>
+                        </div>
+
+                        <div style="margin-top:10px" class="form-row">
+                            <label><input type="checkbox" id="agree" required> I confirm the details above are correct</label>
+                        </div>
+
+                        <div class="actions">
+                            <button type="button" class="btn secondary" id="backTo2">Back</button>
+                            <div class="right">
+                                <button type="submit" class="btn" id="submitBtn">Submit Booking</button>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </form>
+
+                <!-- feedback area -->
+                <div id="feedback" style="margin-top:12px;"></div>
+
+            </aside>
+        </main>
+
+        <footer style="margin-top:22px;text-align:center;color:var(--muted);font-size:0.9rem">
+            © Elorm Borborbor Group — Saviefe Agorkpo, Volta Region • Contact: elormborborborgroup@gmail.com • Owner: degboekwasielorm97@gmail.com
+        </footer>
+    </div>
+
+    <script>
+        // Basic map fallback: if iframe doesn't load after delay, show fallback
+        (function(){
+            const iframe = document.getElementById('gmap-frame');
+            const fallback = document.getElementById('mapFallback');
+
+            let loaded = false;
+            iframe.addEventListener('load', ()=> { loaded = true; });
+            // after 4s, if iframe not loaded, show fallback
+            setTimeout(()=> {
+                if(!loaded){
+                    iframe.style.display = 'none';
+                    fallback.style.display = 'flex';
+                }
+            }, 4000);
+        })();
+
+        // Multi-step form logic
+        (function(){
+            const form = document.getElementById('bookingForm');
+            const panels = Array.from(document.querySelectorAll('.step-panel'));
+            const steps = Array.from(document.querySelectorAll('.step'));
+            const feedback = document.getElementById('feedback');
+
+            function showStep(n){
+                panels.forEach(p => p.style.display = (p.dataset.step===String(n)) ? '' : 'none');
+                steps.forEach(s => s.classList.toggle('active', Number(s.dataset.step)===n));
+                // focus first input
+                const first = document.querySelector('.step-panel[data-step="'+n+'"] input, .step-panel[data-step="'+n+'"] textarea, .step-panel[data-step="'+n+'"] select');
+                if(first) first.focus();
+            }
+
+            document.getElementById('toStep2').addEventListener('click', ()=>{
+                // validate step1 fields
+                const name = document.getElementById('name');
+                const email = document.getElementById('email');
+                const phone = document.getElementById('phone');
+                clearFeedback();
+
+                if(!name.value.trim()){ showError('Please enter your full name.'); name.focus(); return; }
+                if(!validateEmail(email.value)){ showError('Please enter a valid email address.'); email.focus(); return; }
+                if(!validatePhone(phone.value)){ showError('Please enter a valid phone number (e.g., +233 24 682 6309 or 0246826309).'); phone.focus(); return; }
+
+                showStep(2);
+            });
+
+            document.getElementById('backTo1').addEventListener('click', ()=> showStep(1));
+            document.getElementById('toStep3').addEventListener('click', ()=>{
+                // validate key step2 fields
+                clearFeedback();
+                const date = document.getElementById('date');
+                const eventType = document.getElementById('eventType');
+                if(!eventType.value){ showError('Please choose an event type.'); eventType.focus(); return; }
+                if(!date.value){ showError('Please select an event date.'); date.focus(); return; }
+                buildSummary();
+                showStep(3);
+            });
+            document.getElementById('backTo2').addEventListener('click', ()=> showStep(2));
+
+            // form submit (simulated)
+            form.addEventListener('submit', function(ev){
+                ev.preventDefault();
+                clearFeedback();
+                const agree = document.getElementById('agree');
+                if(!agree.checked){ showError('Please confirm the details before submitting.'); agree.focus(); return; }
+
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+
+                // Simulate upload size check for file
+                const file = document.getElementById('file').files[0];
+                if(file && file.size > 5*1024*1024){
+                    showError('Uploaded file is too large. Max 5MB.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Booking';
+                    return;
+                }
+
+                // Simulate server processing and auto-responder
+                setTimeout(()=> {
+                    // success
+                    showSuccess('Booking submitted successfully. An auto-response has been (simulated) sent to your email.');
+                    // show simulated auto-responder content
+                    const simulatedAuto = document.createElement('div');
+                    simulatedAuto.className = 'card';
+                    simulatedAuto.style.marginTop = '12px';
+                    simulatedAuto.style.padding = '12px';
+                    simulatedAuto.innerHTML = '<strong>Auto-response preview (simulated):</strong><div style="margin-top:8px">Thank you for contacting Elorm Borborbor Group. We have received your booking request and will contact you within 48 hours. Booking summary is included.</div>';
+                    feedback.appendChild(simulatedAuto);
+
+                    // Simulate owner notification
+                    const ownerNote = document.createElement('div');
+                    ownerNote.style.marginTop='8px';
+                    ownerNote.className='muted';
+                    ownerNote.textContent = 'Owner notified at degboekwasielorm97@gmail.com (simulated).';
+                    feedback.appendChild(ownerNote);
+
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Booking';
+
+                    // Reset form after short delay to simulate completion (optional UX)
+                    setTimeout(()=> {
+                        form.reset();
+                        showStep(1);
+                        document.getElementById('summaryContent').innerHTML = '';
+                    }, 3000);
+
+                }, 1500);
+            });
+
+            // helper functions
+            function validateEmail(v){
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+            }
+            function validatePhone(v){
+                v = (v||'').trim();
+                if(!v) return false;
+                // Accept +233 format or local 0XX
+                if(/^\+233\s?\d{2,3}\s?\d{3}\s?\d{3}$/.test(v)) return true;
+                if(/^0\d{8,9}$/.test(v.replace(/\s+/g,''))) return true;
+                // fallback to digits length check
+                const digits = v.replace(/\D/g,'');
+                return digits.length >= 9 && digits.length <= 13;
+            }
+
+            function showError(txt){
+                feedback.innerHTML = '<div class="toast error">'+escapeHtml(txt)+'</div>';
+            }
+            function showSuccess(txt){
+                feedback.innerHTML = '<div class="toast success">'+escapeHtml(txt)+'</div>';
+            }
+            function clearFeedback(){ feedback.innerHTML = ''; }
+
+            function buildSummary(){
+                const fields = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    message: document.getElementById('message').value,
+                    eventType: document.getElementById('eventType').value,
+                    date: document.getElementById('date').value,
+                    time: document.getElementById('time').value,
+                    attendees: document.getElementById('attendees').value,
+                    details: document.getElementById('details').value,
+                    file: document.getElementById('file').files[0] ? document.getElementById('file').files[0].name : 'No file attached'
+                };
+                const html = `
+                    <div style="margin-top:8px">
+                        <div><strong>Name:</strong> ${escapeHtml(fields.name)}</div>
+                        <div><strong>Email:</strong> ${escapeHtml(fields.email)}</div>
+                        <div><strong>Phone:</strong> ${escapeHtml(fields.phone)}</div>
+                        <div><strong>Event:</strong> ${escapeHtml(fields.eventType)} — <span class="muted">${escapeHtml(fields.date)} ${escapeHtml(fields.time)}</span></div>
+                        <div><strong>Attendees:</strong> ${escapeHtml(fields.attendees || '—')}</div>
+                        <div style="margin-top:8px"><strong>Details:</strong><div class="muted">${escapeHtml(fields.details || fields.message || '—')}</div></div>
+                        <div style="margin-top:8px"><strong>Attachment:</strong> ${escapeHtml(fields.file)}</div>
+                    </div>
+                `;
+                document.getElementById('summaryContent').innerHTML = html;
+            }
+
+            // small XSS-safe helper
+            function escapeHtml(s){
+                return String(s||'').replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
+            }
+
+            // Show file name size note
+            document.getElementById('file').addEventListener('change', function(){
+                const file = this.files[0];
+                const note = document.getElementById('fileNote');
+                if(!file){ note.textContent = 'Max 5MB. Optional.'; return; }
+                note.textContent = file.name + ' • ' + Math.round(file.size/1024) + ' KB';
+            });
+
+        })();
+
+        // Accessibility: allow pressing Enter on map directions with keyboard via buttons
+        document.getElementById('directionsBtn').addEventListener('keydown', function(e){ if(e.key==='Enter') this.click(); });
+        document.getElementById('openMapsBtn').addEventListener('keydown', function(e){ if(e.key==='Enter') this.click(); });
+    </script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>About — Elorm Borborbor Group</title>
+
+    <!-- Professional typography -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --bg:#0f1720;
+            --card:#0b1220;
+            --muted:#9aa4b2;
+            --accent:#e9a74a;
+            --glass: rgba(255,255,255,0.04);
+            --max-width:1100px;
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+            color:#e6eef6;
+            background: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.25)), url('assets/images/hero-pattern.jpg') center/cover fixed no-repeat;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            line-height:1.5;
+            padding:48px 20px;
+        }
+
+        .container{
+            max-width:var(--max-width);
+            margin:0 auto;
+            background: linear-gradient(180deg, rgba(10,14,20,0.55), rgba(6,10,14,0.65));
+            border-radius:12px;
+            padding:36px;
+            box-shadow:0 10px 30px rgba(2,6,12,0.6);
+            backdrop-filter: blur(6px);
+        }
+
+        header{
+            display:flex;
+            gap:20px;
+            align-items:center;
+        }
+        .logo{
+            width:92px;
+            height:92px;
+            border-radius:12px;
+            overflow:hidden;
+            flex:0 0 92px;
+            box-shadow:0 6px 18px rgba(0,0,0,0.6), inset 0 -10px 20px rgba(0,0,0,0.2);
+            border:1px solid rgba(255,255,255,0.04);
+        }
+        .logo img{width:100%;height:100%;object-fit:cover;display:block}
+        h1{
+            font-family:Playfair Display, serif;
+            margin:0;
+            font-size:28px;
+            letter-spacing:0.2px;
+        }
+        p.lead{
+            margin:6px 0 0;
+            color:var(--muted);
+            font-size:14px;
+        }
+
+        /* Two column main */
+        .grid{
+            display:grid;
+            grid-template-columns: 1fr 360px;
+            gap:28px;
+            margin-top:28px;
+        }
+
+        /* Timeline */
+        .timeline{
+            background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+            padding:20px;
+            border-radius:10px;
+            border:1px solid rgba(255,255,255,0.03);
+        }
+        .timeline-title{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:12px;
+        }
+        .timeline-list{
+            position:relative;
+            padding-left:28px;
+        }
+        .timeline-list::before{
+            content:"";
+            position:absolute;
+            left:12px;
+            top:0;
+            bottom:0;
+            width:2px;
+            background:linear-gradient(180deg,var(--accent), rgba(233,167,74,0.25));
+            border-radius:3px;
+            opacity:0.9;
+        }
+        .event{
+            position:relative;
+            padding:14px 18px;
+            margin:14px 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius:10px;
+            border:1px solid rgba(255,255,255,0.02);
+        }
+        .event::before{
+            content:"";
+            position:absolute;
+            left:-22px;
+            top:20px;
+            width:14px;
+            height:14px;
+            border-radius:50%;
+            background:var(--accent);
+            box-shadow:0 0 0 4px rgba(233,167,74,0.08);
+        }
+        .event h3{
+            margin:0 0 6px;
+            font-size:16px;
+            color:#fff;
+        }
+        .event time{
+            font-size:13px;
+            color:var(--muted);
+        }
+        .event p{margin:8px 0 0;color:var(--muted);font-size:14px}
+
+        /* Sidebar */
+        aside{
+            position:relative;
+            display:flex;
+            flex-direction:column;
+            gap:18px;
+        }
+        .card{
+            background:var(--card);
+            padding:18px;
+            border-radius:10px;
+            border:1px solid rgba(255,255,255,0.03);
+        }
+        .mission h3,.achievements h3,.testimonials h3{margin:0 0 8px;font-size:16px}
+        .mission p{color:var(--muted);margin:0;font-size:14px}
+
+        /* Team grid */
+        .team{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:12px;
+        }
+        .member{
+            display:flex;
+            gap:12px;
+            align-items:center;
+            background:var(--glass);
+            padding:10px;
+            border-radius:8px;
+            border:1px solid rgba(255,255,255,0.02);
+        }
+        .member img{width:56px;height:56px;border-radius:8px;object-fit:cover;flex:0 0 56px}
+        .member .meta{font-size:13px}
+        .member .meta strong{display:block;color:#fff;font-size:14px}
+
+        /* Achievements list */
+        .achievements ul{padding-left:18px;margin:8px 0;color:var(--muted)}
+        .achievements li{margin:6px 0}
+
+        /* Testimonials */
+        .testimonial{
+            padding:12px;
+            border-radius:8px;
+            background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+            color:var(--muted);
+            min-height:88px;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            justify-content:center;
+        }
+        .testimonial .quote{font-style:italic;color:#fff}
+        .testimonial .who{font-size:13px;color:var(--muted)}
+
+        /* Imagery section */
+        .hero-image{
+            margin-top:18px;
+            border-radius:12px;
+            overflow:hidden;
+            border:1px solid rgba(255,255,255,0.04);
+            box-shadow:0 8px 30px rgba(2,6,12,0.6);
+        }
+        .hero-image img{width:100%;height:auto;display:block}
+
+        /* Footer */
+        footer{margin-top:20px;color:var(--muted);font-size:13px;text-align:center}
+
+        /* Responsive */
+        @media (max-width:980px){
+            .grid{grid-template-columns:1fr; padding-bottom:12px}
+            aside{order:2}
+            header{gap:12px}
+        }
+    </style>
+</head>
+<body>
+    <main class="container" role="main" aria-labelledby="page-title">
+        <header>
+            <div class="logo" aria-hidden="true">
+                <!-- Use a high-quality logo image; fallbacks recommended -->
+                <picture>
+                    <source srcset="assets/images/logo@2x.png 2x, assets/images/logo.png 1x" />
+                    <img src="assets/images/logo.png" alt="Elorm Borborbor Group logo" loading="lazy">
+                </picture>
+            </div>
+            <div>
+                <h1 id="page-title">Elorm Borborbor Group — About Us</h1>
+                <p class="lead">A living bridge between tradition and contemporary cultural expression — Cherishing roots, teaching the future.</p>
+            </div>
+        </header>
+
+        <div class="grid" aria-live="polite">
+            <!-- Left: History timeline, cultural significance, images -->
+            <section class="timeline" aria-labelledby="history-title">
+                <div class="timeline-title">
+                    <h2 id="history-title" style="font-family:Playfair Display, serif;margin:0;font-size:18px;color:#fff">History & Origins</h2>
+                    <span style="color:var(--muted);font-size:13px">A timeline of our journey</span>
+                </div>
+
+                <div class="timeline-list" role="list">
+                    <article class="event" role="listitem" aria-label="Founding 1998">
+                        <h3>Founding — 1998</h3>
+                        <time>1998</time>
+                        <p>Founded in the coastal villages of Volta, Elorm Borborbor began as a community initiative to revive traditional Borborbor songs and dances led by village elders and youth coordinators.</p>
+                    </article>
+
+                    <article class="event" role="listitem" aria-label="Community Expansion 2005">
+                        <h3>Community Expansion — 2005</h3>
+                        <time>2005</time>
+                        <p>Formalized as the Elorm Borborbor Group, we introduced structured classes, inter-village performances, and cultural workshops across the region.</p>
+                    </article>
+
+                    <article class="event" role="listitem" aria-label="National Recognition 2013">
+                        <h3>National Recognition — 2013</h3>
+                        <time>2013</time>
+                        <p>Recognized for excellence in cultural preservation with invitations to national festivals, educational partnerships, and media features highlighting Borborbor traditions.</p>
+                    </article>
+
+                    <article class="event" role="listitem" aria-label="Global Outreach 2020">
+                        <h3>Global Outreach — 2020</h3>
+                        <time>2020</time>
+                        <p>Pivoted to digital programs during global travel restrictions and launched virtual workshops to connect diasporic communities to living traditions.</p>
+                    </article>
+
+                    <article class="event" role="listitem" aria-label="Present and Future">
+                        <h3>Present & Future</h3>
+                        <time>2023 — Present</time>
+                        <p>Ongoing projects include youth mentorship, archival recordings, and collaborative performances that innovate while honoring core cultural practices.</p>
+                    </article>
+                </div>
+
+                <!-- Cultural significance -->
+                <div style="margin-top:18px">
+                    <h3 style="margin:0 0 8px;font-size:16px">Cultural Significance of Borborbor</h3>
+                    <p style="color:var(--muted);margin:0;font-size:14px">
+                        Borborbor is more than movement; it is an expressive language of community memory. Rooted in harvest celebrations, rites of passage, and communal storytelling, the dance fosters social cohesion and transmits values across generations. Our work documents variations, preserves songs and rhythms, and situates Borborbor within contemporary cultural dialogues.
+                    </p>
+                </div>
+
+                <!-- High-quality imagery integration -->
+                <div class="hero-image" aria-hidden="false" style="margin-top:16px">
+                    <!-- Responsive picture element with srcset for high-quality imagery -->
+                    <picture>
+                        <source media="(min-width:800px)" srcset="https://images.unsplash.com/photo-1540202404-3493c5d1b6a9?w=1600&q=80&auto=format&fit=crop 1x" />
+                        <source media="(min-width:400px)" srcset="https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa?w=800&q=70&auto=format&fit=crop 1x" />
+                        <img src="assets/images/borborbor-hero-small.jpg"
+                                 alt="Elorm Borborbor dancers performing in traditional attire"
+                                 loading="lazy"
+                                 style="width:100%;height:auto;display:block">
+                    </picture>
+                </div>
+            </section>
+
+            <!-- Right Sidebar: mission, achievements, team, testimonials -->
+            <aside aria-labelledby="about-side">
+                <section class="card mission" aria-labelledby="mission-title">
+                    <h3 id="mission-title">Cultural Preservation Mission</h3>
+                    <p>We document, teach, and celebrate Borborbor — ensuring authentic practice remains accessible and meaningful in modern contexts. Our programs focus on intergenerational mentorship, archival recording, and community-led curation.</p>
+                </section>
+
+                <section class="card achievements" aria-labelledby="achieve-title">
+                    <h3 id="achieve-title">Achievements & Milestones</h3>
+                    <ul>
+                        <li>Established Elders Archive: 400+ oral histories recorded</li>
+                        <li>National Cultural Award for Community Performance, 2014</li>
+                        <li>100+ trained youth apprentices across 12 communities</li>
+                        <li>International festival tours and virtual workshops since 2020</li>
+                    </ul>
+                </section>
+
+                <section class="card" aria-labelledby="team-title">
+                    <h3 id="team-title">Team & Instructors</h3>
+                    <div class="team" role="list">
+                        <div class="member" role="listitem">
+                            <img src="assets/images/team/elorm.jpg" alt="Elorm — Founder and Artistic Director" loading="lazy">
+                            <div class="meta">
+                                <strong>Elorm</strong>
+                                Founder & Artistic Director<br>
+                                Steward of traditional repertoire and program lead.
+                            </div>
+                        </div>
+
+                        <div class="member" role="listitem">
+                            <img src="assets/images/team/afia.jpg" alt="Joe — Lead Drummer and Educator" loading="lazy">
+                            <div class="meta">
+                                <strong>Joe</strong>
+                                Lead Drummer<br>
+                                Specialist in rhythmic traditions and community workshops.
+                            </div>
+                        </div>
+
+                        <div class="member" role="lead - singer">
+                            <img src="assets/images/team/kwesi.jpg" alt="Foh Eric Atta — Outreach Coordinator" loading="lazy">
+                            <div class="meta">
+                                <strong>Foh eric Atta</strong>
+                                Outreach Coordinator<br>
+                                Community liaison and youth mentorship coordinator.
+                            </div>
+                        </div>
+
+                        <div class="member" role="listitem">
+                            <img src="assets/images/team/maria.jpg" alt="Divine Dandzo — Archive Curator" loading="lazy">
+                            <div class="meta">
+                                <strong>Divine Dandzo</strong>
+                                Archive Curator<br>
+                                Leads recordings, transcription, and preservation projects.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card testimonials" aria-labelledby="testi-title">
+                    <h3 id="testi-title">Testimonials</h3>
+
+                    <div id="testimonial-rotator" style="position:relative">
+                        <div class="testimonial" data-index="0">
+                            <div class="quote">"Elorm Borborbor brought our village celebrations back to life — the music and dance are now part of our school curriculum."</div>
+                            <div class="who">— Mr Nutso , Community Leader</div>
+                        </div>
+
+                        <div class="testimonial" data-index="1" hidden>
+                            <div class="quote">"Their menbers deeply respect elders' knowledge while creating space for youth innovation."</div>
+                            <div class="who">— PImpim Kudzo, Ethnomusicologist</div>
+                        </div>
+
+                        <div class="testimonial" data-index="2" hidden>
+                            <div class="quote">"Attending a virtual programs connected me to my heritage across the ocean. The archive is invaluable."</div>
+                            <div class="who">— Agbenyefia Judith Selasi, Diaspora Participant</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+                        <button id="prevTesti" aria-label="Previous testimonial" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:6px 10px;border-radius:6px;cursor:pointer">‹</button>
+                        <button id="nextTesti" aria-label="Next testimonial" style="background:var(--accent);border:none;color:#071018;padding:6px 10px;border-radius:6px;cursor:pointer">›</button>
+                    </div>
+                </section>
+            </aside>
+        </div>
+
+        <footer>
+            <p>For archival inquiries, workshops, or partnership opportunities email: info@elormborborbor.org</p>
+        </footer>
+    </main>
+
+    <script>
+        // Simple testimonial rotator (no external libs)
+        (function(){
+            const container = document.getElementById('testimonial-rotator');
+            if(!container) return;
+            const items = Array.from(container.querySelectorAll('.testimonial'));
+            let idx = 0;
+            const show = (i) => {
+                items.forEach((el, j) => {
+                    if(j===i){ el.removeAttribute('hidden'); } else { el.setAttribute('hidden', ''); }
+                });
+            };
+            document.getElementById('prevTesti').addEventListener('click', () => {
+                idx = (idx - 1 + items.length) % items.length;
+                show(idx);
+            });
+            document.getElementById('nextTesti').addEventListener('click', () => {
+                idx = (idx + 1) % items.length;
+                show(idx);
+            });
+            // Auto-rotate every 7s
+            setInterval(()=>{ idx = (idx + 1) % items.length; show(idx); }, 7000);
+        })();
+    </script>
+</body>
+</html></p>

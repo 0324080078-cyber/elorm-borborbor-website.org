@@ -1,0 +1,380 @@
+/* responsive.css
+  Mobile-first responsive utilities and components
+  Breakpoints:
+    - Mobile:    320px - 767px
+    - Tablet:    768px - 1023px
+    - Desktop:   1024px - 1439px
+    - Large:     1440px+
+*/
+
+/* ---------------------------
+  Variables
+  --------------------------- */
+:root{
+  --color-bg: #ffffff;
+  --color-ink: #111827;
+  --color-accent: #0066ff;
+  --color-muted: #6b7280;
+  --nav-height: 56px;
+  --touch-size: 44px;
+  --radius: 8px;
+
+  /* Breakpoints (min-width) */
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+  --bp-large: 1440px;
+}
+
+/* ---------------------------
+  Base / Reset
+  --------------------------- */
+*,
+*::before,
+*::after{ box-sizing: border-box; }
+
+html,body{
+  height:100%;
+  margin:0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--color-bg);
+  color:var(--color-ink);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  -webkit-tap-highlight-color: rgba(0,0,0,0.06);
+  -webkit-text-size-adjust:100%;
+}
+
+img, picture, video, iframe{
+  max-width:100%;
+  height:auto;
+  display:block;
+  border:0;
+  line-height:0;
+  object-fit:cover; /* recommended for responsive cropping */
+}
+
+/* Provide a predictable container */
+.container{
+  width:100%;
+  padding-inline:1rem;
+  margin-inline:auto;
+}
+
+/* Constrain on larger screens */
+@media (min-width: 768px){
+  .container{ max-width:720px; padding-inline:1.25rem; }
+}
+@media (min-width: 1024px){
+  .container{ max-width:1024px; padding-inline:1.5rem; }
+}
+@media (min-width: 1440px){
+  .container{ max-width:1320px; padding-inline:2rem; }
+}
+
+/* Accessibility helper */
+.sr-only{
+  position:absolute !important;
+  height:1px; width:1px;
+  overflow:hidden;
+  clip:rect(1px,1px,1px,1px);
+  white-space:nowrap;
+}
+
+/* ---------------------------
+  Touch-optimized controls
+  --------------------------- */
+.touch-target{
+  min-width: var(--touch-size);
+  min-height: var(--touch-size);
+  padding: .5rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: calc(var(--touch-size) / 4);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Buttons */
+.button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.5rem;
+  padding:.5rem .75rem;
+  font-weight:600;
+  color:#fff;
+  background:var(--color-accent);
+  border:0;
+  border-radius:6px;
+  cursor:pointer;
+  user-select:none;
+}
+
+/* Press states larger targets */
+.button:active,
+.touch-target:active{
+  transform: translateY(1px);
+}
+
+/* ---------------------------
+  Hamburger Navigation (mobile-first)
+  --------------------------- */
+.nav{
+  position:relative;
+  height:var(--nav-height);
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  background:transparent;
+  padding-inline: .5rem;
+}
+
+/* Logo area */
+.nav__brand{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  font-weight:700;
+  text-decoration:none;
+  color:var(--color-ink);
+}
+
+/* Toggle button */
+.nav__toggle{
+  margin-left:auto;
+  background:transparent;
+  border:0;
+  padding:.25rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  width:48px;
+  height:48px;
+}
+
+/* Hamburger bars */
+.nav__toggle .bars,
+.nav__toggle .bars::before,
+.nav__toggle .bars::after{
+  display:block;
+  background:var(--color-ink);
+  height:2px;
+  width:22px;
+  border-radius:2px;
+  transition: transform .22s cubic-bezier(.2,.9,.3,1), opacity .15s ease;
+  position:relative;
+}
+.nav__toggle .bars::before,
+.nav__toggle .bars::after{
+  content:"";
+  position:absolute;
+  left:0;
+}
+.nav__toggle .bars::before{ top:-7px; }
+.nav__toggle .bars::after{ top:7px; }
+
+/* Menu (hidden on mobile until expanded) */
+.nav__menu{
+  position:absolute;
+  inset-inline-start:0;
+  inset-inline-end:0;
+  top:100%;
+  background:var(--color-bg);
+  margin-top:.25rem;
+  box-shadow: 0 8px 24px rgba(15,15,15,0.08);
+  border-radius: calc(var(--radius) / 1.5);
+  overflow:hidden;
+  display:none;
+  flex-direction:column;
+  padding:.5rem;
+  gap:.25rem;
+  z-index:40;
+  transform-origin: top center;
+  will-change:transform,opacity;
+}
+
+/* Menu items */
+.nav__item{ list-style:none; }
+.nav__link{
+  display:block;
+  padding:.65rem .75rem;
+  border-radius:6px;
+  color:var(--color-ink);
+  text-decoration:none;
+  font-weight:600;
+}
+.nav__link:hover,
+.nav__link:focus{ background:rgba(0,0,0,0.03); }
+
+/* When toggle expanded: show menu and animate bars */
+.nav__toggle[aria-expanded="true"] .bars{
+  background:transparent;
+}
+.nav__toggle[aria-expanded="true"] .bars::before{
+  transform: translateY(7px) rotate(45deg);
+}
+.nav__toggle[aria-expanded="true"] .bars::after{
+  transform: translateY(-7px) rotate(-45deg);
+}
+.nav__toggle[aria-expanded="true"] + .nav__menu{
+  display:flex;
+  animation: menu-in .18s ease;
+}
+@keyframes menu-in{
+  from{ opacity:0; transform: scale(.98); }
+  to{ opacity:1; transform: scale(1); }
+}
+
+/* ---------------------------
+  Desktop/tablet nav layout
+  --------------------------- */
+@media (min-width: 768px){
+  .nav{
+   padding-inline: 1rem;
+   height:64px;
+  }
+  .nav__toggle{ display:none; } /* show full menu */
+  .nav__menu{
+   position:static;
+   display:flex !important;
+   flex-direction:row;
+   gap: .75rem;
+   margin:0;
+   background:transparent;
+   box-shadow:none;
+   padding:0;
+   transform:none;
+   align-items:center;
+  }
+  .nav__link{ padding:.5rem .65rem; }
+}
+
+/* Larger screens: more spacing */
+@media (min-width: 1024px){
+  .nav{ height:72px; padding-inline:1.5rem; }
+  .nav__link{ padding:.5rem .85rem; }
+}
+
+/* ---------------------------
+  Responsive media helpers
+  --------------------------- */
+/* Maintain aspect ratio container for embeds */
+.responsive-media{
+  width:100%;
+  position:relative;
+  overflow:hidden;
+  background: #000;
+}
+.responsive-media::before{
+  content:"";
+  display:block;
+  padding-top:56.25%; /* 16:9 default */
+}
+.responsive-media > iframe,
+.responsive-media > video,
+.responsive-media > img{
+  position:absolute;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* Utility: explicit aspect ratios */
+.aspect-4-3::before{ padding-top:75%; }
+.aspect-16-9::before{ padding-top:56.25%; }
+.aspect-1-1::before{ padding-top:100%; }
+
+/* Serve optimized images: prefer-block display to avoid baseline white space */
+img.responsive{
+  display:block;
+  width:100%;
+  height:auto;
+  image-rendering: optimizeQuality;
+}
+
+/* ---------------------------
+  Mobile-specific interactions
+  --------------------------- */
+/* Reduce accidental gestures and improve scroll behavior */
+html, body{
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
+}
+
+/* Disable hover-only effects on touch devices */
+@media (hover: none){
+  .hover\:elevate:hover{ transform:none; box-shadow:none; }
+}
+
+/* Provide quick-tap feedback */
+.tap-feedback{
+  transition: background-color .12s ease, transform .08s ease;
+}
+.tap-feedback:active{ transform: translateY(1px); }
+
+/* ---------------------------
+  Performance-focused rules
+  --------------------------- */
+/* Respect user prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce){
+  *{
+   transition: none !important;
+   animation: none !important;
+   scroll-behavior: auto !important;
+  }
+}
+
+/* Avoid heavy compositor work by limiting will-change usage */
+.will-change-transform{ will-change: transform; }
+
+/* Use containment for heavy widgets */
+.contain-layout{ contain: layout; }
+
+/* Limit expensive shadows on mobile */
+@media (max-width: 767px){
+  .heavy-shadow{ box-shadow:none; }
+}
+
+/* ---------------------------
+  Utilities
+  --------------------------- */
+.flex{ display:flex; }
+.flex-col{ display:flex; flex-direction:column; }
+.items-center{ align-items:center; }
+.justify-between{ justify-content:space-between; }
+.gap-1{ gap:.5rem; }
+
+/* Truncate text */
+.truncate{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* Small helpers for spacing */
+.mt-1{ margin-top:.5rem; }
+.mb-1{ margin-bottom:.5rem; }
+.p-1{ padding:.5rem; }
+
+/* ---------------------------
+  Example small components (optional)
+  --------------------------- */
+.card{
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+  overflow:hidden;
+}
+
+/* Footer responsive stack */
+.footer{
+  padding:1.25rem;
+  font-size:.9rem;
+  color:var(--color-muted);
+}
+@media (min-width: 768px){
+  .footer{ display:flex; gap:1rem; align-items:center; justify-content:space-between; }
+}

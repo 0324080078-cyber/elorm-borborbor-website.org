@@ -1,0 +1,58 @@
+{
+    "name": "elorm-borborbor-server",
+    "version": "1.0.0",
+    "description": "Backend server for ELORM BORBORBOR GROUP website",
+    "main": "src/index.js",
+    "type": "commonjs",
+    "engines": {
+        "node": ">=18"
+    },
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon --watch src --exec \"node -r dotenv/config src/index.js\"",
+        "test": "echo \"No tests specified\" && exit 0"
+    },
+    "keywords": [
+        "elorm",
+        "borborbor",
+        "backend",
+        "express",
+        "student-project"
+    ],
+    "author": "ELORM BORBORBOR GROUP <noreply@example.com>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/your-org/elorm-borborbor-server.git"
+    },
+    "bugs": {
+        "url": "https://github.com/your-org/elorm-borborbor-server/issues"
+    },
+    "homepage": "https://github.com/your-org/elorm-borborbor-server#readme",
+    "dependencies": {
+        "express": "^4.18.2",
+        "cors": "^2.8.5",
+        "dotenv": "^16.1.4",
+        "multer": "^1.4.5-lts.1",
+        "nodemailer": "^6.9.3",
+        "axios": "^1.4.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.22"
+    },
+    "files": [
+        "src"
+    ],
+    "config": {
+        "studentProject": true,
+        "recommendedMiddlewareSetup": [
+            "app.use(express.json())",
+            "app.use(express.urlencoded({ extended: true }))",
+            "app.use(cors())",
+            "app.use(express.static('public'))",
+            "use multer with configured storage and file limits for uploads",
+            "load environment variables with dotenv at startup"
+        ],
+        "notes": "Create src/index.js to initialize the Express app, load dotenv, register middleware from recommendedMiddlewareSetup, mount routes from src/routes, and configure a mailer in src/config/mail.js using environment variables (SMTP host, port, user, pass)."
+    }
+}

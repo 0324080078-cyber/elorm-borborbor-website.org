@@ -1,0 +1,154 @@
+# Node modules
+/node_modules/
+**/node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+debug.log
+
+# Environment / secret files
+.env
+.env.*
+.env.*.local
+.env.local
+.env.production
+.env.development
+.env.test
+.envrc
+.local.env
+local.env
+local.settings.json
+credentials.json
+secrets.yml
+*.secret
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+*.jks
+.keystore
+*.publishsettings
+.npmrc
+
+# Uploaded / user-generated files
+/uploads/
+uploads/
+public/uploads/
+storage/
+storage/uploads/
+media/
+files/
+user-uploads/
+tmp_uploads/
+
+# Build / generated output
+/dist/
+/build/
+/out/
+/lib/
+/public/build/
+/. next/
+/.next/
+/.nuxt/
+/.vercel/
+/.serverless/
+/aws-sam/
+.terraform/
+*.tsbuildinfo
+*.map
+*.bundle
+*.log.*.gz
+
+# Coverage / reports / test output
+coverage/
+coverage-*
+.nyc_output/
+reports/
+test-results/
+
+# Temporary files
+tmp/
+temp/
+.cache/
+.sass-cache/
+.pnp.*
+.pnpm-store/
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.orig
+
+# Process / runtime files
+pids/
+*.pid
+*.seed
+*.pid.lock
+*.sock
+
+# IDE / editor files
+.vscode/
+.idea/
+*.sublime-*
+*.code-workspace
+*.iml
+*.vscode-test/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+Icon?
+~$*
+*.lnk
+
+# Docker / container files
+docker-compose.override.yml
+.docker/
+*.tgz
+
+# CI / tooling / caches
+coverage/
+.cache/
+bower_components/
+.cache-loader/
+.cache/
+dist/
+node_modules/
+jspm_packages/
+typings/
+.vscode-test/
+build/
+.npm/
+.snyk
+
+# Sensitive or credential material (catch-all)
+*.env
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.credentials
+secrets.*
+credentials.*
+
+# Misc generated files
+*.class
+*.log.gz
+.idea/
+.vagrant/
+**/local.settings.json
+
+# Keep this file tracked; adjust ignore rules above to whitelist specific example/allowed files

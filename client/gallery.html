@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Borborbor — Gallery</title>
+    <style>
+        :root{
+            --gap:16px;
+            --max-width:1200px;
+            --bg:#0f1720;
+            --card:#0b1220;
+            --accent:#ffb84d;
+            --text:#e6eef8;
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--text)}
+        .wrap{max-width:var(--max-width);margin:32px auto;padding:0 16px}
+        header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+        h1{font-size:1.25rem;margin:0}
+        .nav{display:flex;gap:8px;align-items:center}
+        .btn{background:transparent;border:1px solid rgba(255,255,255,.06);color:var(--text);padding:8px 12px;border-radius:8px;text-decoration:none;font-size:0.9rem;cursor:pointer}
+        .btn.primary{background:var(--accent);color:#08101a;border-color:transparent}
+        .filters{display:flex;gap:8px;flex-wrap:wrap}
+        .filters button{cursor:pointer}
+        /* Grid */
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--gap)}
+        .card{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);border-radius:10px;overflow:hidden;position:relative;cursor:pointer;border:1px solid rgba(255,255,255,.03)}
+        .thumb{display:block;width:100%;height:0;padding-bottom:66.66%;object-fit:cover;background:#000}
+        .card .meta{position:absolute;left:8px;bottom:8px;padding:6px 8px;border-radius:999px;background:rgba(0,0,0,.5);color:#fff;font-size:12px}
+        .card video.thumb{height:100%;width:100%;padding-bottom:0;display:block;object-fit:cover}
+        /* Lightbox */
+        .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,.7);z-index:999;padding:30px}
+        .lightbox.open{display:flex}
+        .lb-content{max-width:1100px;width:100%;max-height:90vh;display:flex;align-items:center;justify-content:center;position:relative}
+        .lb-media{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 10px 40px rgba(2,6,23,.7)}
+        .lb-media img,.lb-media video{display:block;max-width:100%;max-height:90vh;border-radius:8px}
+        .lb-close{position:absolute;right:-6px;top:-6px;background:#08101a;color:var(--accent);border-radius:50%;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.05);cursor:pointer}
+        .lb-nav{position:absolute;left:8px;right:8px;top:50%;transform:translateY(-50%);display:flex;justify-content:space-between;pointer-events:none}
+        .lb-nav button{pointer-events:auto;background:rgba(0,0,0,.45);border:0;color:#fff;padding:8px;border-radius:8px;cursor:pointer}
+        footer{margin-top:20px;color:rgba(255,255,255,.6);font-size:0.85rem;text-align:center}
+        @media (max-width:480px){
+            .lb-close{width:32px;height:32px}
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <div>
+                <h1>Borborbor Gallery</h1>
+                <div style="color:rgba(255,255,255,.6);font-size:0.9rem">Filterable • Responsive • Lightbox</div>
+            </div>
+            <nav class="nav" aria-label="top navigation">
+                <a class="btn" href="/">Back to Home</a>
+            </nav>
+        </header>
+
+        <section aria-labelledby="filters">
+            <div id="filters" class="filters" role="toolbar" aria-label="Gallery filters">
+                <button class="btn primary" data-filter="all">All</button>
+                <button class="btn" data-filter="image">Images</button>
+                <button class="btn" data-filter="video">Videos</button>
+            </div>
+        </section>
+
+        <main style="margin-top:18px">
+            <div id="gallery" class="grid" aria-live="polite"></div>
+        </main>
+
+        <footer>© Borborbor — Media gallery</footer>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="lb-content" role="document">
+            <div class="lb-nav">
+                <button id="prevBtn" aria-label="Previous">◀</button>
+                <button id="nextBtn" aria-label="Next">▶</button>
+            </div>
+            <div id="lbWrapper" class="lb-media" aria-live="polite"></div>
+            <button id="closeBtn" class="lb-close" aria-label="Close">✕</button>
+        </div>
+    </div>
+
+    <script>
+        // Items with correct paths (spaces encoded)
+        const items = [
+            {type:'image', src: 'images/gallery/WhatsApp%20Image%202025-11-18%20at%2022.25.48_5cd14b54.jpg', alt:'Borborbor image 1'},
+            {type:'image', src: 'images/gallery/WhatsApp%20Image%202025-11-18%20at%2022.25.48_a783dbd5.jpg', alt:'Borborbor image 2'},
+            {type:'image', src: 'images/gallery/WhatsApp%20Image%202025-11-18%20at%2022.25.47_52300c8a.jpg', alt:'Borborbor image 3'},
+            {type:'video', src: 'images/performance/snaptik_7523664859284770056_v2.mp4', alt:'Borborbor performance video 1'},
+            {type:'video', src: 'images/performance/snaptik_7569276213580107020_v2.mp4', alt:'Borborbor performance video 2'}
+        ];
+
+        const gallery = document.getElementById('gallery');
+        const filters = document.querySelectorAll('[data-filter]');
+        const lightbox = document.getElementById('lightbox');
+        const lbWrapper = document.getElementById('lbWrapper');
+        const closeBtn = document.getElementById('closeBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let currentIndex = 0;
+        let filteredIndexes = items.map((_,i)=>i);
+
+        function buildThumb(item, index){
+            const el = document.createElement('button');
+            el.className = 'card';
+            el.type = 'button';
+            el.dataset.index = index;
+            el.dataset.type = item.type;
+            el.setAttribute('aria-label', item.type === 'image' ? `Open image ${index+1}` : `Open video ${index+1}`);
+
+            if(item.type === 'image'){
+                const img = document.createElement('img');
+                img.className = 'thumb';
+                img.src = item.src;
+                img.alt = item.alt || '';
+                el.appendChild(img);
+            } else {
+                const vid = document.createElement('video');
+                vid.className = 'thumb';
+                vid.src = item.src;
+                vid.muted = true;
+                vid.playsInline = true;
+                vid.preload = 'metadata';
+                vid.loop = true;
+                vid.setAttribute('aria-hidden','true');
+                el.appendChild(vid);
+                // play muted preview when visible
+                el.addEventListener('mouseenter', ()=>{ vid.play().catch(()=>{}) });
+                el.addEventListener('mouseleave', ()=>{ vid.pause(); vid.currentTime = 0; });
+            }
+
+            const meta = document.createElement('div');
+            meta.className = 'meta';
+            meta.textContent = item.type.toUpperCase();
+            el.appendChild(meta);
+
+            el.addEventListener('click', ()=> openLightbox(index));
+            return el;
+        }
+
+        function renderGallery(filter = 'all'){
+            gallery.innerHTML = '';
+            filteredIndexes = [];
+            items.forEach((it,i)=>{
+                if(filter === 'all' || it.type === filter){
+                    gallery.appendChild(buildThumb(it,i));
+                    filteredIndexes.push(i);
+                }
+            });
+            // lazy-start any muted previews in viewport
+            setTimeout(()=> {
+                document.querySelectorAll('.card video.thumb').forEach(v=>{
+                    if(v.getBoundingClientRect().top < window.innerHeight) v.play().catch(()=>{});
+                });
+            }, 120);
+        }
+
+        // Filters
+        filters.forEach(btn=>{
+            btn.addEventListener('click', (e)=>{
+                filters.forEach(b=>b.classList.remove('primary'));
+                e.currentTarget.classList.add('primary');
+                renderGallery(e.currentTarget.dataset.filter);
+            });
+        });
+
+        // Lightbox controls
+        function openLightbox(index){
+            currentIndex = index;
+            showInLightbox(index);
+            lightbox.classList.add('open');
+            lightbox.setAttribute('aria-hidden','false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(){
+            lightbox.classList.remove('open');
+            lightbox.setAttribute('aria-hidden','true');
+            lbWrapper.innerHTML = '';
+            document.body.style.overflow = '';
+        }
+
+        function showInLightbox(index){
+            lbWrapper.innerHTML = '';
+            const item = items[index];
+            if(!item) return;
+            if(item.type === 'image'){
+                const img = document.createElement('img');
+                img.src = item.src;
+                img.alt = item.alt || '';
+                lbWrapper.appendChild(img);
+            } else {
+                const video = document.createElement('video');
+                video.src = item.src;
+                video.controls = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                video.style.maxHeight = '90vh';
+                lbWrapper.appendChild(video);
+            }
+        }
+
+        function next(){
+            // navigate through filteredIndexes if active filter applied
+            const pos = filteredIndexes.indexOf(currentIndex);
+            const nextPos = (pos === -1 ? 0 : (pos + 1) % filteredIndexes.length);
+            currentIndex = filteredIndexes[nextPos];
+            showInLightbox(currentIndex);
+        }
+        function prev(){
+            const pos = filteredIndexes.indexOf(currentIndex);
+            const prevPos = (pos === -1 ? 0 : (pos - 1 + filteredIndexes.length) % filteredIndexes.length);
+            currentIndex = filteredIndexes[prevPos];
+            showInLightbox(currentIndex);
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
+        nextBtn.addEventListener('click', next);
+        prevBtn.addEventListener('click', prev);
+
+        // keyboard
+        window.addEventListener('keydown', (e)=>{
+            if(lightbox.classList.contains('open')){
+                if(e.key === 'Escape') closeLightbox();
+                if(e.key === 'ArrowRight') next();
+                if(e.key === 'ArrowLeft') prev();
+            }
+        });
+
+        // click outside to close
+        lightbox.addEventListener('click', (e)=>{
+            if(e.target === lightbox) closeLightbox();
+        });
+
+        // Initial render (All)
+        renderGallery('all');
+    </script>
+</body>
+</html>
