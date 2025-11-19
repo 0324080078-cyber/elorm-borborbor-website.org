@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /server/
+Disallow: /database/
+Disallow: /assets/
+
+Sitemap: https://elormborborbor.com/sitemap.xml
+
+# Cultural heritage website - please index our cultural content

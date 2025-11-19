@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Download Borborbor Media - ELORM GROUP</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>ELORM BORBORBOR</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="download.html" class="active">Download Media</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 100px;">
+        <h1>Download Borborbor Dance Media</h1>
+
+        <div class="download-section">
+            <h2>Social Media Sources</h2>
+            <div class="source-links">
+                <div class="source-card">
+                    <h3>🎵 TikTok</h3>
+                    <p>https://share.google/5IWZLxustUaQqTNsM</p>
+                    <button onclick="downloadFrom('tiktok')" class="btn btn-primary">Download TikTok Content</button>
+                </div>
+
+                <div class="source-card">
+                    <h3>📷 Instagram</h3>
+                    <p>https://share.google/eAuMkoKodiuxNGdMF</p>
+                    <button onclick="downloadFrom('instagram')" class="btn btn-primary">Download Instagram Content</button>
+                </div>
+
+                <div class="source-card">
+                    <h3>👥 Facebook</h3>
+                    <p>https://share.google/bS1Sv2X7fy54ZOi69</p>
+                    <button onclick="downloadFrom('facebook')" class="btn btn-primary">Download Facebook Content</button>
+                </div>
+            </div>
+
+            <div class="download-all" style="margin-top: 1rem;">
+                <button onclick="downloadAll()" class="btn btn-secondary">Download All Content</button>
+            </div>
+        </div>
+
+        <div class="download-progress" style="margin-top: 2rem;">
+            <h3>Download Progress</h3>
+            <div id="progressMessage" class="progress-message"></div>
+            <div id="downloadResults" class="results-container"></div>
+        </div>
+
+        <div class="downloaded-files" style="margin-top: 2rem;">
+            <h3>Downloaded Media Files</h3>
+            <button onclick="listFiles()" class="btn btn-outline">Refresh File List</button>
+            <div id="fileList" class="file-grid" style="margin-top: 1rem;"></div>
+        </div>
+    </main>
+
+    <script src="js/downloadManager.js"></script>
+</body>
+</html>

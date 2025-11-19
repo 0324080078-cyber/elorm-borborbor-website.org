@@ -1,0 +1,355 @@
+/* animations.css
+  Premium interaction primitives for page load, scroll triggers, hovers,
+  loading, form fields, cultural motifs, and smooth state transitions.
+  - Add JS helpers to toggle `.in-view`, `.is-loading`, `.is-error`, `.is-success`
+  - Respects prefers-reduced-motion
+*/
+
+/* === Global timing and easings === */
+:root{
+  --anim-fast: 180ms;
+  --anim-medium: 360ms;
+  --anim-slow: 600ms;
+  --anim-ease: cubic-bezier(.2,.9,.2,1);
+  --anim-ease-linear: cubic-bezier(.25,.25,.0,.9);
+  --stagger-step: 80ms;
+
+  /* motif colors (override for branding/cultural palette) */
+  --motif-1: #ffb703;
+  --motif-2: #fb8500;
+  --motif-3: #219ebc;
+  --motif-4: #8ecae6;
+
+  /* skeleton */
+  --skeleton-bg: #e6e9ee;
+  --skeleton-highlight: rgba(255,255,255,0.6);
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+   --stagger-step: 0ms;
+  }
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+/* Utility for promoting elements to their own layer for smooth transforms */
+.promote {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* =========================
+  Page load sequences
+  Use: add .page-load to body and then .stagger-container with children .stagger-child
+  JS: on DOM ready remove .page-load or toggle .in-view
+  ========================= */
+.page-load .fade-in {
+  opacity: 0;
+  transform: translateY(8px) scale(.995);
+}
+.page-load .fade-in.is-visible {
+  animation: fadeInUp var(--anim-medium) var(--anim-ease) both;
+}
+
+.stagger-container .stagger-child {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.stagger-container .stagger-child.is-visible {
+  animation: fadeInUp var(--anim-medium) var(--anim-ease) both;
+  /* allow JS to set --stagger-index to stagger via inline style or nth-child fallback below */
+}
+
+/* nth-child fallback stagger (safe) */
+.stagger-container .stagger-child:nth-child(1).is-visible { animation-delay: calc(var(--stagger-step) * 0); }
+.stagger-container .stagger-child:nth-child(2).is-visible { animation-delay: calc(var(--stagger-step) * 1); }
+.stagger-container .stagger-child:nth-child(3).is-visible { animation-delay: calc(var(--stagger-step) * 2); }
+.stagger-container .stagger-child:nth-child(4).is-visible { animation-delay: calc(var(--stagger-step) * 3); }
+.stagger-container .stagger-child:nth-child(5).is-visible { animation-delay: calc(var(--stagger-step) * 4); }
+
+/* Core keyframes for page load */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(10px) scale(.998); }
+  60% { opacity: 1; transform: translateY(-4px) scale(1.002); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Quick variants */
+.slide-left-in { opacity: 0; transform: translateX(12px); }
+.slide-left-in.is-visible { animation: slideLeft var(--anim-medium) var(--anim-ease) both; }
+@keyframes slideLeft { from { opacity:0; transform:translateX(12px);} to{opacity:1; transform:translateX(0);} }
+
+.scale-in { opacity:0; transform: scale(.98); }
+.scale-in.is-visible { animation: scaleIn var(--anim-medium) var(--anim-ease) both; }
+@keyframes scaleIn { from {opacity:0; transform:scale(.98);} 100%{opacity:1; transform:scale(1);} }
+
+/* =========================
+  Scroll-triggered animations
+  - Add .sr-hidden by default, toggle .in-view when element intersects
+  ========================= */
+.sr-hidden { opacity:0; transform: translateY(12px); transition: opacity var(--anim-medium) var(--anim-ease), transform var(--anim-medium) var(--anim-ease); }
+.sr-hidden.in-view { opacity:1; transform: translateY(0); }
+
+/* directional reveals */
+.reveal-up { opacity:0; transform: translateY(14px); transition: var(--anim-medium) var(--anim-ease); }
+.reveal-up.in-view { opacity:1; transform: translateY(0); }
+
+.reveal-left { opacity:0; transform: translateX(-18px); transition: var(--anim-medium) var(--anim-ease); }
+.reveal-left.in-view { opacity:1; transform: translateX(0); }
+
+.reveal-rotate { opacity:0; transform: translateY(6px) rotate(-4deg); transition: var(--anim-medium) var(--anim-ease); }
+.reveal-rotate.in-view { opacity:1; transform: translateY(0) rotate(0deg); }
+
+/* parallax hint (use with transform updates from JS scroll) */
+.parallax { will-change: transform; transform: translateY(0); transition: transform 200ms linear; }
+
+/* =========================
+  Hover micro-interactions
+  ========================= */
+.button-ghost {
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--anim-fast) var(--anim-ease), box-shadow var(--anim-fast) var(--anim-ease);
+}
+.button-ghost:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 8px 20px rgba(12,18,30,0.075); }
+
+/* subtle underline slide for links */
+.link-underline {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--anim-fast) var(--anim-ease);
+}
+.link-underline:hover::after, .link-underline:focus::after { transform: scaleX(1); }
+
+/* icon micro-bounce */
+.icon-bounce { display:inline-block; transition: transform var(--anim-fast) var(--anim-ease); }
+.icon-bounce:hover { transform: translateY(-6px); }
+
+/* ripple effect (material-like) */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  width: 10px; height: 10px;
+  opacity: 0;
+  background: rgba(255,255,255,0.18);
+  transform: scale(1);
+  transition: opacity 600ms var(--anim-ease), transform 800ms var(--anim-ease);
+  pointer-events: none;
+}
+.ripple:active::after {
+  opacity: 1;
+  transform: scale(80);
+  transition: opacity 700ms var(--anim-ease), transform 700ms var(--anim-ease);
+}
+
+/* =========================
+  Loading states
+  ========================= */
+.spinner {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 4px solid rgba(0,0,0,0.08);
+  border-top-color: var(--motif-2);
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.dot-pulse {
+  display:inline-flex; gap:8px; align-items:center;
+}
+.dot-pulse > span {
+  width:8px; height:8px; border-radius:50%; background:var(--motif-2); opacity:.6;
+  animation: dotPulse 900ms infinite ease-in-out;
+}
+.dot-pulse > span:nth-child(2) { animation-delay: 120ms; }
+.dot-pulse > span:nth-child(3) { animation-delay: 240ms; }
+@keyframes dotPulse { 0%,100%{ transform: translateY(0); opacity:.6; } 50%{ transform: translateY(-6px); opacity:1; } }
+
+/* skeleton shimmer */
+.skeleton {
+  position: relative;
+  background: linear-gradient(90deg, var(--skeleton-bg) 0%, var(--skeleton-highlight) 50%, var(--skeleton-bg) 100%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1200ms linear infinite;
+}
+@keyframes skeletonShimmer { 0%{ background-position: 200% 0; } 100%{ background-position: -200% 0; } }
+
+/* progress bar */
+.progress {
+  height: 6px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress > i {
+  display:block; height:100%;
+  width:0%;
+  background: linear-gradient(90deg, var(--motif-1), var(--motif-2));
+  transition: width 420ms var(--anim-ease);
+}
+
+/* =========================
+  Form field animations
+  - Use markup: .field { position:relative } label.floating inside
+  ========================= */
+.field { position: relative; }
+.input {
+  transition: box-shadow var(--anim-fast) var(--anim-ease), border-color var(--anim-fast) var(--anim-ease), transform var(--anim-fast);
+  border: 1px solid rgba(0,0,0,0.12);
+  padding: .75rem .8rem;
+  border-radius: 6px;
+  background: #fff;
+}
+.input:focus { outline: none; border-color: var(--motif-3); box-shadow: 0 6px 20px rgba(14,45,60,0.06); transform: translateY(-2px); }
+
+.label-floating {
+  position: absolute;
+  left: 12px; top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: transform var(--anim-fast) var(--anim-ease), font-size var(--anim-fast) var(--anim-ease), opacity var(--anim-fast) var(--anim-ease);
+  color: rgba(0,0,0,0.6);
+  font-size: 0.95rem;
+}
+.field.has-value .label-floating,
+.input:focus + .label-floating {
+  transform: translateY(-150%) scale(.9);
+  font-size: .78rem;
+  opacity: .95;
+}
+
+/* input error shake and success */
+@keyframes shakeX { 0%{ transform: translateX(0);} 25%{ transform: translateX(-6px);} 50%{ transform:translateX(6px);} 75%{ transform:translateX(-4px);} 100%{ transform: translateX(0);} }
+.field.is-error .input { border-color: #ef4444; box-shadow: 0 8px 18px rgba(239,68,68,0.08); animation: shakeX 420ms var(--anim-ease); }
+.field.is-success .input { border-color: #16a34a; box-shadow: 0 8px 24px rgba(22,163,74,0.06); transform: translateY(-2px); }
+
+/* subtle success check animation */
+.check-success {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(22,163,74,0.12), rgba(22,163,74,0.06));
+  display:inline-grid; place-items:center;
+  transition: transform var(--anim-fast) var(--anim-ease), opacity var(--anim-fast);
+  transform-origin: center;
+}
+.check-success svg { transform-origin: center; stroke-dasharray: 32; stroke-dashoffset: 32; transition: stroke-dashoffset 420ms var(--anim-ease); }
+.field.is-success .check-success { transform: scale(1.06); }
+.field.is-success .check-success svg { stroke-dashoffset: 0; }
+
+/* =========================
+  Cultural motif animations
+  - Generic, respectful patterned motion using palette variables.
+  - Use for hero backgrounds, accents. Avoid explicit appropriation; treat as abstracted pattern.
+  ========================= */
+
+/* banded motif: layered diagonal stripes animate across */
+.motif-bands {
+  position: relative;
+  overflow: hidden;
+  background:
+   linear-gradient(135deg, var(--motif-1) 0 25%, transparent 25% 50%),
+   linear-gradient(315deg, var(--motif-2) 0 25%, transparent 25% 50%),
+   var(--motif-3);
+  background-size: 140px 140px;
+  animation: motifMove 8s linear infinite;
+}
+@keyframes motifMove {
+  0% { background-position: 0 0, 0 0, 0 0; }
+  50% { background-position: -60px 40px, 60px -40px, 0 0; }
+  100% { background-position: 0 0, 0 0, 0 0; }
+}
+
+/* motif pulse border: subtly cycles through motif colors */
+.motif-border {
+  padding: 12px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background-image: linear-gradient(white, white), linear-gradient(90deg, var(--motif-1), var(--motif-2), var(--motif-3));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  animation: motifPulse 6s ease-in-out infinite;
+}
+@keyframes motifPulse {
+  0% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(20deg) saturate(1.05); }
+  100% { filter: hue-rotate(0deg); }
+}
+
+/* motif icon wave (for cultural icons or accents) */
+.motif-wave {
+  display:inline-block;
+  transform-origin: center bottom;
+  animation: motifWave 1400ms var(--anim-ease) infinite;
+}
+.motif-wave[data-pause="true"] { animation-play-state: paused; }
+@keyframes motifWave { 0%{ transform: rotate(0deg);} 25%{ transform: rotate(6deg);} 50%{ transform: rotate(0deg);} 75%{ transform: rotate(-4deg);} 100%{ transform: rotate(0deg);} }
+
+/* =========================
+  Smooth state transitions (global)
+  - Attach .smooth-transition on roots or interactive containers
+  ========================= */
+.smooth-transition *,
+.smooth-transition *::before,
+.smooth-transition *::after {
+  transition-timing-function: var(--anim-ease);
+  transition-duration: var(--anim-medium);
+  transition-property: opacity, transform, color, background-color, border-color, box-shadow;
+}
+
+/* quick utility to fade between states */
+.fade-state {
+  transition: opacity var(--anim-medium) var(--anim-ease), transform var(--anim-medium) var(--anim-ease);
+}
+.fade-state.enter { opacity: 0; transform: translateY(6px) scale(.997); }
+.fade-state.enter-active { opacity: 1; transform: translateY(0) scale(1); }
+
+/* =========================
+  Performance helpers
+  ========================= */
+.anim-avoid-heavy {
+  will-change: opacity, transform;
+}
+
+/* =========================
+  Example combination classes for quick use
+  ========================= */
+/* hero load sequence */
+.hero .hero-title { opacity:0; transform: translateY(8px); }
+.hero.load-complete .hero-title { animation: fadeInUp 620ms var(--anim-ease) both; animation-delay: 160ms; }
+
+/* card hover lift with motif glow */
+.card {
+  transition: transform var(--anim-medium) var(--anim-ease), box-shadow var(--anim-medium) var(--anim-ease);
+  transform-origin: center;
+}
+.card:hover { transform: translateY(-10px) scale(1.01); box-shadow: 0 18px 40px rgba(15,30,45,0.08); }
+.card:hover .card-motif { transform: translateY(-6px) rotate(-2deg); filter: drop-shadow(0 8px 18px rgba(0,0,0,0.08)); }
+
+/* =========================
+  Small helpers for JS-driven additions
+  - .is-loading, .is-done, .is-error, .is-success toggles
+  ========================= */
+.is-loading { pointer-events: none; opacity: .95; }
+.is-done { opacity: 1; }
+.is-error { border-color: #ef4444; }
+.is-success { border-color: #16a34a; }
+
+/* EOF */

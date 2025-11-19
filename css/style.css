@@ -1,0 +1,680 @@
+/* style.css
+  Comprehensive design system + components for elorm-borborbor-website.org
+  Author: GitHub Copilot
+*/
+
+/* =========================================
+  DESIGN TOKENS / DESIGN SYSTEM
+  ========================================= */
+
+:root {
+  /* Ghanaian color palette */
+  --gh-red: #d62828;        /* vibrant red */
+  --gh-gold: #f4c430;       /* gold / yellow */
+  --gh-green: #007f3f;      /* deep green */
+  --gh-black: #0b0b0b;      /* strong black */
+  --gh-ivory: #fff9f0;      /* warm off-white */
+  --gh-muted: #6b6b6b;      /* neutral gray */
+  --gh-accent: #ff6b35;     /* warm accent */
+
+  /* Semantic colors */
+  --color-bg: var(--gh-ivory);
+  --color-surface: #ffffff;
+  --color-muted: var(--gh-muted);
+  --color-text: var(--gh-black);
+  --color-success: #2e8b57;
+  --color-danger: #c42b2b;
+  --color-info: #1f7bd6;
+
+  /* Typography scale (professional scale: modular / major third-ish) */
+  --font-family-sans: "Inter", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --font-family-serif: "Merriweather", serif;
+
+  --type-xxs: 0.625rem;  /* 10px */
+  --type-xs: 0.75rem;    /* 12px */
+  --type-sm: 0.875rem;   /* 14px */
+  --type-base: 1rem;     /* 16px */
+  --type-md: 1.125rem;   /* 18px */
+  --type-lg: 1.25rem;    /* 20px */
+  --type-xl: 1.5rem;     /* 24px */
+  --type-xxl: 1.875rem;  /* 30px */
+  --type-3xl: 2.25rem;   /* 36px */
+  --type-4xl: 3rem;      /* 48px */
+
+  /* Spacing system — 8px base unit */
+  --space-xxs: 4px;              /* 0.5u */
+  --space-xs: 8px;               /* 1u */
+  --space-sm: 16px;              /* 2u */
+  --space-md: 24px;              /* 3u */
+  --space-lg: 32px;              /* 4u */
+  --space-xl: 48px;              /* 6u */
+  --space-xxl: 64px;             /* 8u */
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Elevation / shadows (glass-ready) */
+  --shadow-1: 0 1px 4px rgba(11,11,11,0.06);
+  --shadow-2: 0 6px 20px rgba(11,11,11,0.12);
+  --shadow-3: 0 18px 40px rgba(11,11,11,0.18);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.48);
+  --glass-border: rgba(255,255,255,0.24);
+
+  /* Animation timing functions */
+  --ease-quick: cubic-bezier(.2,.9,.3,1);
+  --ease-medium: cubic-bezier(.22,.9,.32,1);
+  --ease-slow: cubic-bezier(.19,.78,.23,.98);
+  --duration-fast: 160ms;
+  --duration-md: 300ms;
+  --duration-slow: 600ms;
+
+  /* Breakpoints */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+
+  /* Container widths */
+  --container-sm: 720px;
+  --container-md: 960px;
+  --container-lg: 1140px;
+  --container-xl: 1320px;
+
+  /* Z-index scale */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 900;
+  --z-overlay: 950;
+  --z-tooltip: 1100;
+
+  /* Small accessibility helpers */
+  --focus-ring: 3px;
+}
+
+/* =========================================
+  BASE / RESET
+  ========================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root,
+html,
+body {
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  font-size: var(--type-base);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Accessible focus */
+:focus {
+  outline: none;
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: var(--focus-ring) solid rgba(11,11,11,0.12);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* =========================================
+  CULTURAL PATTERN INTEGRATIONS
+  - Ribbon / Kente inspired stripes
+  - Adinkra-inspired motif using gradient/SVG
+  ========================================= */
+
+/* Kente-like stripe background pattern (repeatable) */
+:root {
+  --kente-pattern: linear-gradient(90deg,
+    rgba(0,0,0,0) 0 20%,
+    var(--gh-gold) 20% 24%,
+    rgba(0,0,0,0) 24% 28%,
+    var(--gh-green) 28% 36%,
+    var(--gh-red) 36% 40%,
+    rgba(0,0,0,0) 40% 100%);
+}
+
+/* Subtle Adinkra-like radial motif generated from radial-gradients */
+.pattern-adinkra {
+  background:
+   radial-gradient(circle at 20% 20%, rgba(0,0,0,0.06) 0 4px, transparent 6px),
+   radial-gradient(circle at 80% 80%, rgba(0,0,0,0.05) 0 3px, transparent 6px);
+  background-color: rgba(255,255,255,0.02);
+  background-size: 120px 120px, 80px 80px;
+}
+
+/* Use pattern as overlay for hero or sections */
+.pattern-kente {
+  background-image: var(--kente-pattern);
+  background-size: 240px 240px;
+  opacity: 0.12;
+}
+
+/* Pattern utility */
+.u-pattern-strong {
+  background-image: repeating-linear-gradient(45deg,
+   var(--gh-red) 0 6px,
+   var(--gh-gold) 6px 12px,
+   var(--gh-green) 12px 18px);
+  opacity: 0.9;
+}
+
+/* =========================================
+  LAYOUT: Containers, Grids, Flex Utilities
+  ========================================= */
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  max-width: var(--container-lg);
+}
+
+.container--sm { max-width: var(--container-sm); }
+.container--md { max-width: var(--container-md); }
+.container--lg { max-width: var(--container-lg); }
+.container--xl { max-width: var(--container-xl); }
+
+/* Flex utilities */
+.flex { display: flex; }
+.flex--col { flex-direction: column; }
+.flex--center { align-items: center; justify-content: center; }
+.flex--between { align-items: center; justify-content: space-between; }
+.flex--wrap { flex-wrap: wrap; }
+
+/* Grid utilities */
+.grid { display: grid; gap: var(--space-md); }
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+.grid--auto { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+/* Responsive helpers */
+@media (max-width: calc(var(--bp-md) - 1px)) {
+  .grid--2 { grid-template-columns: 1fr; }
+  .grid--3 { grid-template-columns: 1fr; }
+  .container { padding-left: var(--space-xs); padding-right: var(--space-xs); }
+}
+
+/* Z-index helper classes */
+.z-sticky { z-index: var(--z-sticky); position: relative; }
+.z-modal { z-index: var(--z-modal); }
+
+/* =========================================
+  NAVIGATION (sticky)
+  ========================================= */
+
+.nav {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.55));
+  backdrop-filter: saturate(110%) blur(8px);
+  -webkit-backdrop-filter: saturate(110%) blur(8px);
+  box-shadow: var(--shadow-1);
+  border-bottom: 1px solid rgba(11,11,11,0.04);
+  z-index: var(--z-sticky);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--space-xs)) var(--space-sm);
+}
+
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 600;
+  font-size: var(--type-lg);
+  color: var(--color-text);
+}
+
+.nav__links {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.nav__link {
+  color: var(--color-text);
+  text-decoration: none;
+  padding: calc(var(--space-xs) / 2) var(--space-sm);
+  border-radius: var(--radius-sm);
+  transition: background var(--duration-fast) var(--ease-quick), color var(--duration-fast) var(--ease-quick);
+}
+.nav__link:hover,
+.nav__link:focus {
+  background: rgba(0,0,0,0.04);
+}
+
+/* Mobile nav */
+.nav__toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: var(--space-xs);
+}
+@media (max-width: var(--bp-md)) {
+  .nav__links { display: none; }
+  .nav__toggle { display: inline-flex; }
+}
+
+/* =========================================
+  HERO (parallax)
+  - simple CSS-only parallax using background-attachment and pseudo element
+  ========================================= */
+
+.hero {
+  position: relative;
+  min-height: 56vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-lg) 0;
+  overflow: hidden;
+  color: var(--color-text);
+}
+
+/* Parallax background */
+.hero--parallax {
+  background-color: var(--gh-gold);
+  background-image: linear-gradient(135deg, rgba(0,0,0,0.02) 0 20%, rgba(255,255,255,0.02) 20% 50%), url('/assets/hero-placeholder.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* fallback parallax */
+}
+
+/* Additional parallax layer using pseudo-element (for large screens) */
+@media (min-width: var(--bp-md)) {
+  .hero--parallax::before {
+   content: "";
+   position: absolute;
+   inset: 0;
+   background-image: radial-gradient(circle at 10% 20%, rgba(0,0,0,0.06), transparent 20%),
+               linear-gradient(180deg, rgba(0,0,0,0.08), transparent 40%);
+   transform: translateZ(0) translateY(-8%);
+   will-change: transform;
+   pointer-events: none;
+  }
+}
+
+/* HERO content */
+.hero__content {
+  position: relative;
+  z-index: 2;
+  max-width: 880px;
+  padding: var(--space-md);
+  backdrop-filter: blur(4px) saturate(1.02);
+}
+
+.hero__title {
+  font-family: var(--font-family-serif);
+  font-size: var(--type-4xl);
+  margin: 0 0 var(--space-sm);
+  line-height: 1.05;
+}
+
+.hero__subtitle {
+  font-size: var(--type-lg);
+  color: var(--color-muted);
+  margin: 0 auto;
+  max-width: 60ch;
+}
+
+/* =========================================
+  CARDS
+  ========================================= */
+
+.card {
+  background: linear-gradient(180deg, var(--color-surface), #fbfbfb);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  transition: transform var(--duration-md) var(--ease-medium), box-shadow var(--duration-md) var(--ease-medium);
+  border: 1px solid rgba(11,11,11,0.04);
+}
+
+.card--glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px) saturate(110%);
+  -webkit-backdrop-filter: blur(8px) saturate(110%);
+}
+
+/* Card media */
+.card__media {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card body */
+.card__body {
+  padding: var(--space-md);
+}
+
+.card__title {
+  font-size: var(--type-md);
+  margin: 0 0 var(--space-xs);
+  font-weight: 700;
+}
+
+.card__copy {
+  font-size: var(--type-sm);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Hover states with lift and cultural accent */
+.card:hover,
+.card:focus-within {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-3);
+  border-color: rgba(11,11,11,0.06);
+}
+.card:hover .card__accent {
+  transform: translateX(0);
+}
+
+/* small accent stripe reminiscent of kente */
+.card__accent {
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--gh-red), var(--gh-gold), var(--gh-green));
+  transform: translateX(-8px);
+  transition: transform var(--duration-fast) var(--ease-quick);
+}
+
+/* Card grid variant */
+.card--grid {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+/* =========================================
+  BUTTON SYSTEM
+  ========================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: var(--type-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-quick),
+          box-shadow var(--duration-fast) var(--ease-quick),
+          background var(--duration-fast) var(--ease-quick),
+          color var(--duration-fast) var(--ease-quick);
+  user-select: none;
+  text-decoration: none;
+}
+
+/* Variants */
+.btn--primary {
+  background: linear-gradient(180deg, var(--gh-red), #b21e1e);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(214,40,40,0.18);
+}
+.btn--primary:hover { transform: translateY(-2px); }
+
+.btn--secondary {
+  background: linear-gradient(180deg, #fff, #f8f8f8);
+  color: var(--gh-red);
+  border-color: rgba(11,11,11,0.06);
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text);
+  border-color: transparent;
+}
+.btn--outline {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid rgba(11,11,11,0.08);
+}
+.btn--danger {
+  background: linear-gradient(180deg, var(--color-danger), #a82222);
+  color: #fff;
+}
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Button sizes */
+.btn--sm { padding: 6px 10px; font-size: var(--type-xs); border-radius: var(--radius-sm); }
+.btn--lg { padding: 14px 20px; font-size: var(--type-md); border-radius: var(--radius-md); }
+
+/* =========================================
+  FORMS & VALIDATION
+  ========================================= */
+
+.form {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: var(--type-base);
+  border: 1px solid rgba(11,11,11,0.08);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  transition: border-color var(--duration-fast) var(--ease-quick), box-shadow var(--duration-fast) var(--ease-quick);
+}
+
+.input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--gh-red);
+  box-shadow: 0 6px 18px rgba(214,40,40,0.08);
+  outline: none;
+}
+
+/* Validation states */
+.input:invalid,
+textarea:invalid,
+select:invalid {
+  border-color: var(--color-danger);
+  box-shadow: 0 3px 10px rgba(196,43,43,0.08);
+}
+
+.input:valid {
+  border-color: var(--color-success);
+}
+
+/* Placeholder styling */
+::placeholder { color: rgba(11,11,11,0.35); }
+
+/* Inline validation messages */
+.form__hint {
+  font-size: var(--type-xs);
+  color: var(--color-muted);
+}
+.form__error {
+  font-size: var(--type-xs);
+  color: var(--color-danger);
+}
+
+/* Form-row */
+.form__row { display: grid; gap: var(--space-sm); grid-template-columns: 1fr; }
+@media (min-width: var(--bp-md)) {
+  .form__row--2 { grid-template-columns: 1fr 1fr; }
+}
+
+/* =========================================
+  MODAL & LIGHTBOX (CSS-driven)
+  - show by toggling .is-open on .modal or using [data-open]
+  ========================================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-md) var(--ease-medium), visibility 0s linear var(--duration-md);
+  z-index: var(--z-overlay);
+}
+
+/* overlay */
+.modal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11,11,11,0.42), rgba(11,11,11,0.6));
+  backdrop-filter: blur(4px) saturate(0.95);
+  -webkit-backdrop-filter: blur(4px) saturate(0.95);
+  opacity: 0;
+  transition: opacity var(--duration-md) var(--ease-medium);
+}
+
+/* Open state — can be toggled via JS by adding .is-open */
+.modal.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+.modal.is-open::before { opacity: 1; }
+
+/* Modal panel */
+.modal__panel {
+  position: relative;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  width: min(92vw, 900px);
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 24px 60px rgba(11,11,11,0.3);
+  transform: translateY(24px) scale(.98);
+  transition: transform var(--duration-md) var(--ease-medium), opacity var(--duration-md) var(--ease-medium);
+  padding: var(--space-lg);
+  z-index: var(--z-modal);
+}
+.modal.is-open .modal__panel {
+  transform: translateY(0) scale(1);
+}
+
+/* Modal close */
+.modal__close {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  background: transparent;
+  border: none;
+  font-size: var(--type-base);
+  cursor: pointer;
+}
+
+/* Lightbox image */
+.lightbox__img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  display: block;
+  margin: 0 auto;
+  box-shadow: var(--shadow-3);
+}
+
+/* =========================================
+  UTILITIES
+  ========================================= */
+
+.mt-xxs { margin-top: var(--space-xxs); }
+.mt-xs { margin-top: var(--space-xs); }
+.mt-sm { margin-top: var(--space-sm); }
+.mt-md { margin-top: var(--space-md); }
+.mt-lg { margin-top: var(--space-lg); }
+
+.p-xxs { padding: var(--space-xxs); }
+.p-xs { padding: var(--space-xs); }
+.p-sm { padding: var(--space-sm); }
+.p-md { padding: var(--space-md); }
+.p-lg { padding: var(--space-lg); }
+
+/* Text utilities */
+.text-center { text-align: center; }
+.text-muted { color: var(--color-muted); }
+.lead { font-size: var(--type-lg); color: var(--color-muted); }
+
+/* Small print */
+.small { font-size: var(--type-xs); color: var(--color-muted); }
+
+/* =========================================
+  ACCESSIBLE COLLECTION: reduced-motion
+  ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-fast: 1ms; --duration-md: 1ms; --duration-slow: 1ms; }
+  .hero--parallax { background-attachment: scroll; }
+  .card, .btn, .modal__panel { transition: none !important; }
+}
+
+/* =========================================
+  EXAMPLES / HELPERS (class recipes)
+  ========================================= */
+
+/* Hero CTA group */
+.hero__ctas { display: inline-flex; gap: var(--space-sm); margin-top: var(--space-md); }
+
+/* Footer with kente stripe */
+.footer {
+  background: var(--color-surface);
+  border-top: 1px solid rgba(11,11,11,0.04);
+  padding: var(--space-lg) 0;
+}
+.footer__stripe {
+  height: 8px;
+  background: linear-gradient(90deg, var(--gh-red), var(--gh-gold), var(--gh-green));
+}
+
+/* =========================================
+  NOTES
+  - This stylesheet focuses on a modular token-based system.
+  - For parallax that tracks scroll more precisely, a small JS helper may be added.
+  - Toggle modal visibility by adding/removing the .is-open class on .modal element.
+  - Keep images and background assets optimized for performance.
+  ========================================= */
